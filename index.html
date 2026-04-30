@@ -4,237 +4,277 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <!-- SEO: Deskripsi Maksimal untuk Google Search -->
-    <title>Kiki.Saputra86 | Unit Investigasi Siber & Penindakan Kriminal Digital</title>
-    <meta name="description" content="kiki saputra86 dikenal sebagai unit yang memviralkan dan melakukan doxing terhadap kasus penipuan, pelecehan, kekerasan, dan kriminal. Memantau jejak digital pelaku tanpa toleransi bagi oknum nakal.">
+    <title>Kiki.Saputra86 | Cyber Enforcement & OSINT Command</title>
+    <meta name="description" content="Unit penindakan kasus penipuan, pelecehan, dan kriminal digital. Monitoring jejak digital 24/7.">
     
     <style>
         :root {
             --neon-green: #00ff41;
             --alert-red: #ff0000;
-            --dark-bg: #000000;
-            --terminal-gray: #1a1a1a;
+            --dark-bg: #030303;
+            --glow: 0 0 10px rgba(0, 255, 65, 0.5);
         }
 
-        body { 
-            background-color: var(--dark-bg); 
-            color: var(--neon-green); 
-            font-family: 'Courier New', Courier, monospace; 
+        body, html {
+            background-color: var(--dark-bg);
+            color: var(--neon-green);
+            font-family: 'Courier New', Courier, monospace;
             margin: 0;
             overflow-x: hidden;
+            height: 100%;
+        }
+
+        /* Scanning Line Effect */
+        body::before {
+            content: " ";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: rgba(0, 255, 65, 0.1);
+            z-index: 10;
+            pointer-events: none;
+            animation: scan 4s linear infinite;
+        }
+
+        @keyframes scan {
+            0% { top: 0; }
+            100% { top: 100%; }
+        }
+
+        #matrixCanvas {
+            position: fixed;
+            top: 0; left: 0; z-index: -1;
+            opacity: 0.5;
+        }
+
+        .main-frame {
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
+            padding: 20px;
         }
 
-        /* Matrix Background */
-        #matrixCanvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            z-index: -1;
-        }
-
-        .container { 
+        .container {
             position: relative;
             z-index: 1;
-            border: 2px solid var(--neon-green); 
-            padding: 2rem; 
-            max-width: 750px;
-            width: 90%;
-            background: rgba(5, 5, 5, 0.95);
-            box-shadow: inset 0 0 15px rgba(0, 255, 65, 0.2), 0 0 40px rgba(0, 0, 0, 1);
-            text-align: center;
-            margin: 20px auto;
-        }
-
-        .warning-status {
-            background-color: var(--alert-red);
-            color: #fff;
-            padding: 10px;
-            font-weight: bold;
-            font-size: 0.85rem;
-            margin-bottom: 20px;
-            animation: blink 1.5s infinite;
-        }
-
-        @keyframes blink { 50% { opacity: 0.3; } }
-
-        .glitch {
-            font-size: 2rem;
-            font-weight: bold;
-            text-transform: uppercase;
-            position: relative;
-            text-shadow: 0.05em 0 0 rgba(255, 0, 0, 0.75), -0.025em -0.05em 0 rgba(0, 255, 0, 0.75), 0.025em 0.05em 0 rgba(0, 0, 255, 0.75);
-            animation: glitch 500ms infinite;
-        }
-
-        @keyframes glitch {
-            0% { text-shadow: 0.05em 0 0 rgba(255,0,0,0.75); }
-            14% { text-shadow: 0.05em 0 0 rgba(255,0,0,0.75), -0.05em -0.025em 0 rgba(0,255,0,0.75); }
-            100% { text-shadow: -0.025em 0 0 rgba(0,255,0,0.75), -0.025em -0.025em 0 rgba(0,0,255,0.75); }
-        }
-
-        .ip-monitor {
-            border: 1px solid #444;
-            padding: 10px;
-            margin: 15px 0;
-            background: #050505;
-            text-align: left;
-            font-size: 0.8rem;
-        }
-
-        .target-list {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin: 20px 0;
-            font-size: 0.75rem;
-            text-align: left;
-        }
-
-        .target-item {
-            background: var(--terminal-gray);
-            padding: 8px;
-            border-left: 2px solid var(--alert-red);
-        }
-
-        .btn-action {
-            display: block;
+            border: 1px solid var(--neon-green);
+            padding: 30px;
+            max-width: 800px;
             width: 100%;
-            padding: 15px;
-            margin-top: 10px;
+            background: rgba(0, 0, 0, 0.9);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 1), var(--glow);
+        }
+
+        /* Top Warning Bar */
+        .status-bar {
+            background: var(--alert-red);
+            color: white;
+            font-size: 0.75rem;
             font-weight: bold;
+            padding: 5px;
+            letter-spacing: 2px;
+            margin-bottom: 25px;
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink { 50% { opacity: 0.5; } }
+
+        .header h1 {
+            font-size: 2.2rem;
+            margin: 0;
+            letter-spacing: 8px;
+            text-shadow: var(--glow);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin: 25px 0;
+        }
+
+        .stat-card {
+            border: 1px solid #333;
+            padding: 10px;
+            background: rgba(10, 10, 10, 0.8);
+        }
+
+        .stat-card small { color: #888; font-size: 0.65rem; display: block; margin-bottom: 5px; }
+        .stat-card span { font-size: 1.1rem; font-weight: bold; color: #fff; }
+
+        .terminal-box {
+            background: #050505;
+            border-left: 3px solid var(--neon-green);
+            padding: 15px;
+            text-align: left;
+            margin: 20px 0;
+            min-height: 60px;
+        }
+
+        .btn-zone {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .cyber-btn {
+            padding: 15px;
             text-transform: uppercase;
+            font-weight: bold;
             text-decoration: none;
-            cursor: pointer;
+            font-size: 0.85rem;
             transition: 0.3s;
-            border: none;
-            font-size: 0.9rem;
+            border: 1px solid var(--neon-green);
+            cursor: pointer;
         }
 
-        .btn-report { background: transparent; color: var(--alert-red); border: 2px solid var(--alert-red); }
-        .btn-report:hover { background: var(--alert-red); color: white; box-shadow: 0 0 20px var(--alert-red); }
-        .btn-contact { background: var(--neon-green); color: black; }
-
-        input[type="text"] {
-            background: #000; border: 1px solid var(--neon-green); color: var(--neon-green);
-            padding: 10px; width: 60%; outline: none; font-family: monospace;
-        }
+        .btn-red { color: var(--alert-red); border-color: var(--alert-red); }
+        .btn-red:hover { background: var(--alert-red); color: white; box-shadow: 0 0 15px var(--alert-red); }
+        
+        .btn-green { background: var(--neon-green); color: black; }
+        .btn-green:hover { background: transparent; color: var(--neon-green); box-shadow: var(--glow); }
 
         #logBox {
-            background: #000; border: 1px solid #222; height: 80px; overflow: hidden;
-            padding: 10px; font-size: 0.7rem; color: #00ff41; text-align: left; margin-top: 20px;
+            margin-top: 20px;
+            height: 100px;
+            font-size: 0.7rem;
+            overflow: hidden;
+            border-top: 1px solid #222;
+            padding-top: 10px;
+            text-align: left;
+        }
+
+        .footer-info {
+            margin-top: 20px;
+            font-size: 0.6rem;
+            color: #444;
+            display: flex;
+            justify-content: space-between;
         }
     </style>
 </head>
-<body onclick="enableAudio()">
+<body onclick="initSystem()">
 
     <canvas id="matrixCanvas"></canvas>
-
-    <!-- Sound Element -->
+    
     <audio id="typingSound" loop>
         <source src="https://www.soundjay.com/communication/mechanical-keyboard-typing-1.mp3" type="audio/mpeg">
     </audio>
 
-    <div class="container">
-        <div class="warning-status">CRIMINAL INVESTIGATION IN PROGRESS - KIKI.SAPUTRA86</div>
-        
-        <div class="header-box">
-            <div class="glitch">KIKI.SAPUTRA86</div>
-            <small>DIGITAL CRIME ENFORCEMENT & OSINT COMMAND</small>
-        </div>
-
-        <!-- Real-Time IP Detection -->
-        <div class="ip-monitor">
-            <div><span style="color:#888;">[>] VISITOR_IP:</span> <span id="userIP" style="color:var(--alert-red);">FETCHING...</span></div>
-            <div><span style="color:#888;">[>] STATUS:</span> <span style="color:var(--neon-green);">MONITORING_ACTIVE</span></div>
-            <div><span style="color:#888;">[>] ENCRYPTION:</span> <span style="color:#58a6ff;">AES-256_SECURE</span></div>
-        </div>
-
-        <div class="target-list">
-            <div class="target-item">[!] FRAUD / PENIPUAN</div>
-            <div class="target-item">[!] HARASSMENT / PELECEHAN</div>
-            <div class="target-item">[!] VIOLENCE / KEKERASAN</div>
-            <div class="target-item">[!] CRIMINAL / OKNUM NAKAL</div>
-        </div>
-
-        <!-- OSINT Search Simulation -->
-        <div style="border: 1px solid #333; padding: 15px; background: #050505;">
-            <small style="color: #888;">QUERY CRIMINAL DATABASE:</small><br>
-            <div style="margin-top:10px;">
-                <input type="text" id="targetInput" placeholder="User/Bank Account...">
-                <button onclick="searchDB()" style="background: var(--neon-green); border:none; padding: 10px; cursor:pointer; font-weight:bold;">SCAN</button>
+    <div class="main-frame">
+        <div class="container">
+            <div class="status-bar">SYSTEM STATUS: ACTIVE MONITORING // SECURITY LEVEL 4</div>
+            
+            <div class="header">
+                <h1>KIKI.SAPUTRA86</h1>
+                <p style="color:#888; font-size: 0.7rem; margin-top: 5px;">COMMANDER OF DIGITAL ENFORCEMENT & OSINT HUB</p>
             </div>
-            <div id="searchResult" style="font-size: 0.7rem; margin-top: 10px; color: #ff3e3e;"></div>
-        </div>
 
-        <button class="btn-action btn-report" onclick="initiateEmergency()">⚠️ INITIALIZE EMERGENCY REPORT ⚠️</button>
-        <a href="https://t.me/Nharu8110" class="btn-action btn-contact">LAPORKAN PENIPUAN & OKNUM NAKAL (TELEGRAM)</a>
-        <a href="https://instagram.com/kiki.saputra86" style="color:#fff; text-decoration:none; display:block; margin-top:15px; font-size:0.8rem;">[ AKSES DATABASE INSTAGRAM ]</a>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <small>THREATS_BLOCKED</small>
+                    <span id="threatCount">12,402</span>
+                </div>
+                <div class="stat-card">
+                    <small>VISITOR_IP</small>
+                    <span id="userIP" style="color:var(--alert-red)">0.0.0.0</span>
+                </div>
+                <div class="stat-card">
+                    <small>SYSTEM_LOC</small>
+                    <span>IDN_SEC_NODE_01</span>
+                </div>
+            </div>
 
-        <!-- Live Activity Logs -->
-        <div id="logBox">
-            <div id="scrollingLogs"></div>
-        </div>
+            <div class="terminal-box">
+                <span id="typewriter" style="font-size: 0.85rem;">Initializing Secure Connection...</span><span class="cursor">_</span>
+            </div>
 
-        <div style="font-size: 0.6rem; color: #444; margin-top: 20px;">
-            ID: K-86 | NODE: ID_JKT_01 | PROTECTED BY KIKI.SAPUTRA86
+            <div class="btn-zone">
+                <button onclick="initiateEmergency()" class="cyber-btn btn-red">⚠️ INITIALIZE EMERGENCY REPORT ⚠️</button>
+                <a href="https://t.me/Nharu8110" class="cyber-btn btn-green">HUBUNGI UNIT PENINDAKAN (TELEGRAM)</a>
+                <a href="https://instagram.com/kiki.saputra86" style="color:#555; text-decoration:none; font-size:0.7rem;">[ ACCESS INSTAGRAM DATABASE ]</a>
+            </div>
+
+            <div id="logBox">
+                <div id="scrollingLogs"></div>
+            </div>
+
+            <div class="footer-info">
+                <span>COORD: -6.2088, 106.8456</span>
+                <span>ZULU_TIME: <span id="zuluTime">00:00:00</span></span>
+                <span>ENC: AES-256</span>
+            </div>
         </div>
     </div>
 
     <script>
-        // Matrix Background Effect
+        // Enhanced Matrix Rain
         const canvas = document.getElementById('matrixCanvas');
         const ctx = canvas.getContext('2d');
         canvas.height = window.innerHeight; canvas.width = window.innerWidth;
-        const characters = "01";
-        const fontSize = 16;
+        const characters = "01$#@%&{}[]<>";
+        const fontSize = 14;
         const drops = Array(Math.floor(canvas.width / fontSize)).fill(1);
 
         function drawMatrix() {
-            ctx.fillStyle = "rgba(0, 0, 0, 0.08)"; ctx.fillRect(0, 0, canvas.width, canvas.height);
-            ctx.fillStyle = "#00ff41"; ctx.font = fontSize + "px monospace";
+            ctx.fillStyle = "rgba(0, 0, 0, 0.08)";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = "#00ff41";
+            ctx.font = fontSize + "px monospace";
             drops.forEach((y, i) => {
-                const text = characters.charAt(Math.floor(Math.random()*characters.length));
-                ctx.fillText(text, i*fontSize, y*fontSize);
-                if (y*fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
+                const text = characters.charAt(Math.floor(Math.random() * characters.length));
+                ctx.fillText(text, i * fontSize, y * fontSize);
+                if (y * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
                 drops[i]++;
             });
         }
         setInterval(drawMatrix, 50);
 
-        // Audio Atmosphere
-        const audio = document.getElementById('typingSound');
-        function enableAudio() { audio.play(); audio.volume = 0.15; }
+        // Typewriter Effect
+        const textToType = "Kami memantau aktivitas siber, mengungkap kasus penipuan, pelecehan, dan tindakan kriminal. Jejak digital Anda adalah bukti mutlak kami.";
+        let index = 0;
+        function typeWriter() {
+            if (index < textToType.length) {
+                document.getElementById("typewriter").innerHTML = textToType.substring(0, index + 1);
+                index++;
+                setTimeout(typeWriter, 50);
+            }
+        }
+
+        // System Initialization
+        function initSystem() {
+            document.getElementById('typingSound').play();
+            document.getElementById('typingSound').volume = 0.2;
+            if(index === 0) typeWriter();
+        }
 
         // Fetch IP Real-Time
         fetch('https://api.ipify.org?format=json').then(res => res.json()).then(data => {
             document.getElementById('userIP').innerText = data.ip;
-        }).catch(() => { document.getElementById('userIP').innerText = "PROTECTED_BY_KIKI"; });
+        });
 
-        // Search Database Simulation
-        function searchDB() {
-            const res = document.getElementById('searchResult');
-            const target = document.getElementById('targetInput').value;
-            if(!target) return;
-            res.innerHTML = "SCANNING GLOBAL BLACKLIST...";
-            setTimeout(() => { res.innerHTML = "STATUS: <span style='color:white;'>NOT_DETECTED</span> (MANUAL_CHECK_REQUIRED)"; }, 2000);
-        }
+        // Zulu Time & Threat Counter
+        setInterval(() => {
+            document.getElementById('zuluTime').innerText = new Date().toISOString().split('T')[1].split('.')[0];
+            let threatNum = parseInt(document.getElementById('threatCount').innerText.replace(',', ''));
+            document.getElementById('threatCount').innerText = (threatNum + Math.floor(Math.random() * 3)).toLocaleString();
+        }, 1000);
 
-        // Live Log Generator
-        const logLines = ["[INFO] METADATA CAPTURED", "[WARN] FRAUD PATTERN DETECTED", "[DB] LINKING TO BLACKLIST", "[OK] TARGET TAGGED", "[SYSTEM] AES-256 RE-KEYED"];
+        // Log Generator
+        const logLines = ["[INFO] NODE_STABLE", "[WARN] SCANNING_TRAFFIC", "[DB] TRACING_METADATA", "[OK] TARGET_TAGGED"];
         setInterval(() => {
             const container = document.getElementById('scrollingLogs');
             const log = document.createElement('div');
-            log.innerText = `> ${new Date().toLocaleTimeString()} : ${logLines[Math.floor(Math.random()*logLines.length)]}`;
+            log.innerText = `> ${new Date().toLocaleTimeString()} : ${logLines[Math.floor(Math.random() * logLines.length)]}`;
             container.prepend(log);
             if(container.childNodes.length > 5) container.removeChild(container.lastChild);
-        }, 2000);
+        }, 2500);
 
         function initiateEmergency() {
-            alert("Protokol Darurat Aktif. Menghubungkan metadata pengunjung ke pusat data...");
+            alert("EMERGENCY PROTOCOL ACTIVE. Capturing browser metadata for investigation...");
         }
     </script>
 </body>
